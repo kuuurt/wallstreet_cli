@@ -5,7 +5,7 @@ import json
 from wallstreet import Stock
 from forex_python.converter import CurrencyRates
 
-LOCAL_DB_PATH = os.path.join(os.path.dirname(__file__), 'data', 'db.json')
+LOCAL_DB_PATH = os.path.join(os.path.dirname(__file__), 'data', 'db.txt')
 
 
 def _currency_conversion(source_v: float, source_currency: str, target_currency: str):
@@ -30,6 +30,9 @@ def _get_stock_price(stock_name: str):
     # TODO (easy): handle other exceptions. try using "APPL" as arguement for --stock,
     # unknown error occured
 
+def _get_all_fav_stock_prices():
+    for stock in _get_fav_tickers():
+        show_stock(stock)
 
 def _find_ticker(company_name):
     """give the company_name, finds the ticker name"""
@@ -64,21 +67,26 @@ def _append_fav_ticker(l_of_tickers: list, db_path: str=LOCAL_DB_PATH):
     if not os.path.exists(db_path):
         os.makedirs(os.path.dirname(db_path), exist_ok=True)
 
-    # TODO (easy) read the json file from local path
+    # read the json file from local path
+    # update the list
+    l_of_tickers = l_of_tickers + _get_fav_tickers()
+    file = open(db_path, "w")
+    cont = file.write("{}".format(l_of_tickers))
+    file.close()
 
-    # TODO (easy) update the list
-
-    # TODO (easy) write it back to the file
-
-
-
-def _get_fav_tickers():
+def _get_fav_tickers(db_path: str=LOCAL_DB_PATH):
     """read from the local json file, get all fav tickers
 
     Returns a list of strings
     """ 
-    # TODO (easy): return list of tickers from file
-
+    # return list of tickers from file
+    if not os.path.exists(db_path):
+        return []
+    file = open(db_path, "r")
+    content = file.read()
+    file.close()
+    output = content.strip("][").replace("'", '').split(", ")
+    return output
 
 def main():
     parser = argparse.ArgumentParser(description='cli for wallstreet')
@@ -88,11 +96,16 @@ def main():
     
     parser.add_argument('--currency', default='EUR', help='currency')
 
+    parser.add_argument("--add_fav", default=None, help="show stock price of ticker")
+    parser.add_argument("--show_fav", default=False, action="store_true")
     args = parser.parse_args()
 
     if args.stock:
         show_stock(args.stock)
-
+    elif args.show_fav:
+        _get_all_fav_stock_prices()
+    elif args.add_fav:
+        _append_fav_ticker(args.add_fav.split(","))
 
 if __name__ == "__main__":
     main()
