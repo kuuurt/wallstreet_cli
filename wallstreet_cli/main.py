@@ -1,18 +1,17 @@
 import os
 import argparse
-import json
+# import json
 
 from wallstreet import Stock
 from forex_python.converter import CurrencyRates
 
-LOCAL_DB_PATH = os.path.join(os.path.dirname(__file__), 'data', 'db.txt')
+LOCAL_DB_PATH = os.path.join(os.path.dirname(__file__), "data", "db.txt")
 
 
 def _currency_conversion(source_v: float, source_currency: str, target_currency: str):
     """Convert source currency to target currency
-
     Args:
-        source_v (float): 
+        source_v (float):
         source_currency (str): designation of source currency
         target_currency (str): [description]
     """
@@ -43,7 +42,6 @@ def _find_ticker(company_name):
 
 def show_stock(stock_name: str):
     """show stock price of certain stock
-
     Args:
         stock_name (str): [description]
     """
@@ -51,14 +49,13 @@ def show_stock(stock_name: str):
     price_in_usd = _get_stock_price(stock_name)
     if not price_in_usd:
         return
-    price_in_eur = _currency_conversion(price_in_usd, 'USD', 'EUR')
+    price_in_eur = _currency_conversion(price_in_usd, "USD", "EUR")
 
     print(f"{stock_name}: {round(price_in_eur, 2)} EUR")
 
 
 def _append_fav_ticker(l_of_tickers: list, db_path: str=LOCAL_DB_PATH):
-    """
-    append a list of tickers to a json file
+    """append a list of tickers to a json file
     Args:
         l_of_tickers (list): list of tickers to add to favorites
         db_path (str, optional): path to store the fav file. Defaults to LOCAL_DB_PATH.
@@ -71,30 +68,28 @@ def _append_fav_ticker(l_of_tickers: list, db_path: str=LOCAL_DB_PATH):
     # update the list
     l_of_tickers = l_of_tickers + _get_fav_tickers()
     file = open(db_path, "w")
-    cont = file.write("{}".format(l_of_tickers))
+    file.write("{}".format(l_of_tickers))
     file.close()
 
 def _get_fav_tickers(db_path: str=LOCAL_DB_PATH):
     """read from the local json file, get all fav tickers
-
     Returns a list of strings
-    """ 
+    """
     # return list of tickers from file
     if not os.path.exists(db_path):
         return []
     file = open(db_path, "r")
     content = file.read()
     file.close()
-    output = content.strip("][").replace("'", '').split(", ")
+    output = content.strip("][").replace("'", "").split(", ")
     return output
 
 def main():
-    parser = argparse.ArgumentParser(description='cli for wallstreet')
+    parser = argparse.ArgumentParser(description="cli for wallstreet")
 
-    parser.add_argument('--stock', help='show stock price of ticker')
+    parser.add_argument("--stock", help="show stock price of ticker")
 
-    
-    parser.add_argument('--currency', default='EUR', help='currency')
+    parser.add_argument("--currency", default="EUR", help="currency")
 
     parser.add_argument("--add_fav", default=None, help="show stock price of ticker")
     parser.add_argument("--show_fav", default=False, action="store_true")

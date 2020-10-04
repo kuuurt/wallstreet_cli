@@ -1,5 +1,7 @@
 # wallstreet_cli
 
+wallstreet_cli is a terminal application for checking real-time stock prices.
+
 ## Installation (wip)
 install make (or just run the commands in the Makefile)
 ```
