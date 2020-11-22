@@ -1,16 +1,15 @@
-# wallstreet_cli
+#+TITLE: wallstreet_cli
 
 wallstreet_cli is a terminal application for checking real-time stock prices.
 
-## Installation (wip)
+** Installation (wip)
 install make (or just run the commands in the Makefile)
-```
+#+BEGIN_SRC python
 make init_venv
 source venv/bin/activate
-```
+#+END_SRC
 
-## Usage
-```
+** Usage
+#+BEGIN_SRC python
 python3 -m wallstreet_cli.main --stock AAPL
-```
-
+#+END_SRC
