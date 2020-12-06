@@ -30,7 +30,7 @@ def get_stock_from_dataset(isin, dataset):
     # get stock info from dataset
     for ticker_dict in dataset:
         if isin == ticker_dict['ISIN']:
-            return ticker_dict['price']
+            return ticker_dict['EndPrice']
     print("Isin number not found!")
 
 
