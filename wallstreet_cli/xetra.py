@@ -5,7 +5,9 @@ import subprocess
 
 def get_filename():
     # show list of all filenames in tmp
-    file_list = glob.glob("tmp/*.csv")
+    date = get_latest_date_on_s3()
+
+    file_list = glob.glob(f"tmp/{date}/*.csv")
     return file_list
 
 def parse_csv(filename):
@@ -19,14 +21,16 @@ def parse_csv(filename):
 
 def download():
     # download all s3 files from the given date
+    # TODO more efficient
     if not os.path.exists("tmp"):
         os.makedirs("tmp")
     date = get_latest_date_on_s3()
-    cmd = f"aws s3 cp s3://deutsche-boerse-xetra-pds/{date}/ tmp --recursive --no-sign-request"
+    cmd = f"aws s3 cp s3://deutsche-boerse-xetra-pds/{date}/ tmp/{date} --recursive --no-sign-request"
     subprocess.check_output(cmd, shell=True)
 
 
 def get_stock_from_dataset(isin, dataset):
+    # TODO make more efficient
     # get stock info from dataset
     for ticker_dict in dataset:
         if isin == ticker_dict['ISIN']:
@@ -39,3 +43,20 @@ def get_latest_date_on_s3():
     output = subprocess.check_output(cmd, shell=True).decode()
     date = output[-12:-2]
     return date
+
+
+def main(isin_list):
+    # download csvs
+    download()
+
+    # get filenames
+    file_list = get_filename()
+
+    csv_list_total = []
+    for filename in file_list:
+        csv_list = parse_csv(filename)
+        csv_list_total = csv_list_total + csv_list
+    # get the price
+    # TODO short output with only price
+    for isin in isin_list:
+        print("ISIN: " + isin + ", Price: " + str(get_stock_from_dataset(isin, csv_list_total)))
