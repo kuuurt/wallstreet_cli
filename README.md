@@ -8,6 +8,11 @@ install make (or just run the commands in the Makefile)
 make init_venv
 source venv/bin/activate
 ```
+or
+```
+python3 setup.py install
+```
+
 
 ## Usage
 ```
