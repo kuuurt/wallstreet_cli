@@ -25,9 +25,14 @@ def download():
     cmd = f"aws s3 cp s3://deutsche-boerse-xetra-pds/{date}/ tmp --recursive --no-sign-request"
     subprocess.check_output(cmd, shell=True)
 
-def get_stock_from_dataset(dataset):
+
+def get_stock_from_dataset(isin, dataset):
     # get stock info from dataset
-    pass
+    for ticker_dict in dataset:
+        if isin == ticker_dict['ISIN']:
+            return ticker_dict['price']
+    print("Isin number not found!")
+
 
 def get_latest_date_on_s3():
     cmd = "aws s3 ls deutsche-boerse-xetra-pds/ --no-sign-request | sort -r | head -n 1"
