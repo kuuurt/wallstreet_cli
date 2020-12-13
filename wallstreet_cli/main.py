@@ -3,6 +3,7 @@ import argparse
 # import json
 
 from wallstreet import Stock
+from wallstreet_cli import xetra
 from forex_python.converter import CurrencyRates
 
 LOCAL_DB_PATH = os.path.join(os.path.dirname(__file__), "data", "db.txt")
@@ -30,8 +31,10 @@ def _get_stock_price(stock_name: str):
     # unknown error occured
 
 def _get_all_fav_stock_prices():
-    for stock in _get_fav_tickers():
-        show_stock(stock)
+    xetra.main(_get_fav_tickers())
+    # for stock in _get_fav_tickers():
+    #     xetra.get_stock_from_dataset(stock, csv_list)
+        # show_stock(stock)
 
 def _find_ticker(company_name):
     """give the company_name, finds the ticker name"""
@@ -85,6 +88,8 @@ def _get_fav_tickers(db_path: str=LOCAL_DB_PATH):
     return output
 
 def main():
+    ## TODO clean tmp files
+
     parser = argparse.ArgumentParser(description="cli for wallstreet")
 
     parser.add_argument("--stock", help="show stock price of ticker")
