@@ -21,17 +21,17 @@ def _currency_conversion(source_v: float, source_currency: str, target_currency:
 
 
 def _get_stock_price(stock_name: str):
+
     try:
-        s = Stock(stock_name)
-        return s.price
+        return xetra.pipeline([stock_name])
     except IndexError:
         print("Ticker not found!")
         return None
     # TODO (easy): handle other exceptions. try using "APPL" as arguement for --stock,
     # unknown error occured
 
-def _get_all_fav_stock_prices():
-    xetra.main(_get_fav_tickers())
+def _get_all_fav_stock_prices(show_command):
+    xetra.pipeline(_get_fav_tickers(), show_command)
     # for stock in _get_fav_tickers():
     #     xetra.get_stock_from_dataset(stock, csv_list)
         # show_stock(stock)
@@ -95,7 +95,7 @@ def main():
     parser.add_argument("--stock", help="show stock price of ticker")
 
     parser.add_argument("--currency", default="EUR", help="currency")
-
+    parser.add_argument("-s", default=False, action="store_true")
     parser.add_argument("--add_fav", default=None, help="show stock price of ticker")
     parser.add_argument("--show_fav", default=False, action="store_true")
     args = parser.parse_args()
@@ -103,7 +103,7 @@ def main():
     if args.stock:
         show_stock(args.stock)
     elif args.show_fav:
-        _get_all_fav_stock_prices()
+        _get_all_fav_stock_prices(args.s)
     elif args.add_fav:
         _append_fav_ticker(args.add_fav.split(","))
 

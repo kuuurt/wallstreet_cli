@@ -45,7 +45,7 @@ def get_latest_date_on_s3():
     return date
 
 
-def main(isin_list):
+def pipeline(isin_list,short_command=None):
     # download csvs
     download()
 
@@ -58,5 +58,9 @@ def main(isin_list):
         csv_list_total = csv_list_total + csv_list
     # get the price
     # TODO short output with only price
-    for isin in isin_list:
-        print("ISIN: " + isin + ", Price: " + str(get_stock_from_dataset(isin, csv_list_total)))
+    if short_command:
+        for isin in isin_list:
+            print(get_stock_from_dataset(isin, csv_list_total))
+    else:
+        for isin in isin_list:
+            print("ISIN: " + isin + ", Price: " + str(get_stock_from_dataset(isin, csv_list_total)))

@@ -2,6 +2,11 @@ import setuptools
 
 setuptools.setup(
     version="0.0.1",
+    install_requires=[
+           'wallstreet==0.3',
+           'forex-python==1.5'
+
+    ],
     description="Wall street cli",
     packages=setuptools.find_packages(),
     classifiers=[
