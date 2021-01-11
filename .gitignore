@@ -134,3 +134,6 @@ data
 
 # Buffer
 *~
+
+# temporary folder
+tmp/
