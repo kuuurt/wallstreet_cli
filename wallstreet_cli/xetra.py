@@ -64,3 +64,18 @@ def pipeline(isin_list,short_command=None):
     else:
         for isin in isin_list:
             print("ISIN: " + isin + ", Price: " + str(get_stock_from_dataset(isin, csv_list_total)))
+
+
+def get_xetra_prices(date, isin):
+    """Query aws with select object content, and returns
+    all price rows of all csv files listed on specific date"""
+
+    # list all csv files on s3 for that date
+
+    # for each file, run the select object query and store the results
+
+    # perhaps post process the results and make them recods
+
+    # return results
+
+    pass
