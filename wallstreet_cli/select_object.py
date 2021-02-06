@@ -5,6 +5,16 @@ isin = 'DE000A0DJ6J9'
 
 S3_BUCKET = 'deutsche-boerse-xetra-pds'
 
+def list_objects(date, bucket=S3_BUCKET):
+    s3 = boto3.client("s3")
+    response = s3.list_objects_v2(
+            Bucket=bucket,
+            Prefix=date)
+    return [p['Key'] for p in response['Contents']]
+date = '2021-02-05'
+
+print(list_objects(date))
+
 s3 = boto3.client('s3')
 
 cmd = "aws s3 ls deutsche-boerse-xetra-pds/ --no-sign-request | sort -r | head -n 1"
