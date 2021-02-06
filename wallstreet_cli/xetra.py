@@ -25,8 +25,9 @@ def download():
     if not os.path.exists("tmp"):
         os.makedirs("tmp")
     date = get_latest_date_on_s3()
-    cmd = f"aws s3 cp s3://deutsche-boerse-xetra-pds/{date}/ tmp/{date} --recursive --no-sign-request"
-    subprocess.check_output(cmd, shell=True)
+    if not os.path.exists("tmp/" + date):
+        cmd = f"aws s3 cp s3://deutsche-boerse-xetra-pds/{date}/ tmp/{date} --recursive --no-sign-request"
+        subprocess.check_output(cmd, shell=True)
 
 
 def get_stock_from_dataset(isin, dataset):

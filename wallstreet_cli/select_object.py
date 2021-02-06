@@ -1,4 +1,6 @@
 import boto3
+from botocore import UNSIGNED
+from botocore.client import Config
 import subprocess
 
 isin = 'DE000A0DJ6J9'
@@ -6,7 +8,7 @@ isin = 'DE000A0DJ6J9'
 S3_BUCKET = 'deutsche-boerse-xetra-pds'
 
 def list_objects(date, bucket=S3_BUCKET):
-    s3 = boto3.client("s3")
+    s3 = boto3.client("s3", config=Config(signature_version=UNSIGNED))
     response = s3.list_objects_v2(
             Bucket=bucket,
             Prefix=date)
@@ -15,7 +17,7 @@ date = '2021-02-05'
 
 print(list_objects(date))
 
-s3 = boto3.client('s3')
+s3 = boto3.client("s3", config=Config(signature_version=UNSIGNED))
 
 cmd = "aws s3 ls deutsche-boerse-xetra-pds/ --no-sign-request | sort -r | head -n 1"
 output = subprocess.check_output(cmd, shell=True).decode()
@@ -24,7 +26,7 @@ print(output)
 
 r = s3.select_object_content(
         Bucket=S3_BUCKET,
-        Key=f'{date}/',
+        Key=f'{date}/2021-02-05_BINS_XETR08.csv',
         ExpressionType='SQL',
         Expression=f"select * from s3object[*] s where s._1 = '{isin}'",
         InputSerialization={'CSV': {}},
